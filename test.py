@@ -1,5 +1,6 @@
 from Automata import DeterministicFiniteAutomata as DFA
 from Automata import NondeterministicFiniteAutomata as NFA
+from Automata import NFAWithEpsilonTransition as eNFA
 
 
 def is_length_even():
@@ -99,8 +100,34 @@ def has_010():
         else:
             print("reject : \"%s\"" % test)
 
+
+def is_increasing_sequence():
+    """ 広義単調増加な文字列を認識 """
+    print("is_increasing_sequence".center(50, "-"))
+    a, b, c, d, e = range(5)
+    states = [a, b, c, d, e]
+    alphabets = "01234"
+    transitions = {
+        a: {"0": {a}, -1: {b}},
+        b: {"1": {b}, -1: {c}},
+        c: {"2": {c}, -1: {d}},
+        d: {"3": {d}, -1: {e}},
+        e: {"4": {e}}
+    }
+    init_state = a
+    final_states = {e}
+    automata = eNFA(states, alphabets, transitions, init_state, final_states)
+
+    tests = ["01234", "01122334444", "01234231", "1111", "1133344"]
+    for test in tests:
+        if automata.run(test):
+            print("accept : \"%s\"" % test)
+        else:
+            print("reject : \"%s\"" % test)
+
 is_length_even()
 is_divisible_by_3()
 is_end_0XXX()
 has_010()
+is_increasing_sequence()
 print("program ended.")
