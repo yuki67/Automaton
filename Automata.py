@@ -40,7 +40,6 @@ class NondeterministicFiniteAutomata(object):
             else:
                 new_states = set()
                 for state in states:
-                    if self.transitions[state].get(char):
-                        new_states = new_states.union(self.transitions[state][char])
+                    new_states = new_states.union(self.transitions[state].get(char, set()))
                 states = new_states
         return len(states.intersection(self.final_states)) != 0
