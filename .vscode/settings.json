@@ -1,0 +1,14 @@
+// 既定の設定とユーザー設定を上書きするには、このファイル内に設定を挿入します
+{
+    "python.formatting.provider": "autopep8",
+    "python.linting.pep8Args": [
+        "--max-line-length=180"
+    ],
+    "python.formatting.formatOnSave": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.pep8Enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": [
+        "--rcfile=.vscode/.pylintrc"
+    ]
+}

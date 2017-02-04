@@ -1,0 +1,31 @@
+{
+    "version": "0.1.0",
+    "windows": {
+        "command": "cmd",
+        "args": [ "/c" ],
+        "isShellCommand": true,
+        "echoCommand": true,
+        "suppressTaskName": true,
+        "showOutput": "always",
+        "tasks": [
+            {
+                "taskName": "run python in new window",
+                "isTestCommand": true,
+                "args": [
+                    "start", 
+                    "cmd /c", 
+                    "python",
+                    "${file}"
+                ]
+            },
+            {
+                "taskName": "run python in integrated window",
+                "isBuildCommand": true,
+                "args": [
+                    "python",
+                    "${file}"
+                ]
+            }
+        ]
+    }
+}
