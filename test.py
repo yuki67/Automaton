@@ -118,6 +118,61 @@ class IsIncreasingSequence(eNFA):
         super().__init__(states, alphabets, transitions, init_state, final_states)
 
 
+class IsEnd0XXX_DFA(NFA):
+    """ 最後から四文字目が0である文字列を認識 """
+    tests = (("00000000", True),
+             ("000110", True),
+             ("1110", False),
+             ("01", False),
+             ("1110100110", True))
+
+    def __init__(self):
+        a, b, c, d, e = range(5)
+        states = {a, b, c, d, e}
+        alphabets = {"0", "1"}
+        transitions = {
+            a: {"0": {a, b}, "1": {a}},
+            b: {"0": {c}, "1": {c}},
+            c: {"0": {d}, "1": {d}},
+            d: {"0": {e}, "1": {e}},
+            e: {},
+        }
+        init_state = a
+        final_states = {e}
+        self.converted_DFA = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(states, alphabets, transitions, init_state, final_states)
+
+    def run(self, string):
+        return self.converted_DFA.run(string)
+
+
+class Has010_DFA(DFA):
+    """ 010を部分列に持つ文字列を認識 """
+    tests = (("010", True),
+             ("000110", False),
+             ("111111001010", True),
+             ("111101", False),
+             ("1110100110", True))
+
+    def __init__(self):
+        a, b, c, d = range(4)
+        states = {a, b, c, d}
+        alphabets = {"0", "1"}
+        transitions = {
+            a: {"0": {a, b}, "1": {a}},
+            b: {"1": {c}},
+            c: {"0": {d}},
+            d: {"0": {d}, "1": {d}},
+        }
+        init_state = a
+        final_states = {d}
+        self.converted_DFA = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(states, alphabets, transitions, init_state, final_states)
+
+    def run(self, string):
+        return self.converted_DFA.run(string)
+
+
 class AutomatonTest(unittest.TestCase):
     """ オートマトンの動作確認 """
     automaton = [
@@ -125,7 +180,9 @@ class AutomatonTest(unittest.TestCase):
         IsDivisibleBy3,
         IsEnd0XXX,
         Has010,
-        IsIncreasingSequence
+        IsIncreasingSequence,
+        Has010_DFA,
+        IsEnd0XXX_DFA,
     ]
 
     def test_automaton(self):
