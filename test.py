@@ -173,6 +173,34 @@ class Has010_DFA(DFA):
         return self.converted_DFA.run(string)
 
 
+class IsIncreasingSequence_DFA(eNFA):
+    """ 広義単調増加な文字列を認識 """
+    tests = (("01234", True),
+             ("01122334444", True),
+             ("01234231", False),
+             ("1111", True),
+             ("1133344", True))
+
+    def __init__(self):
+        a, b, c, d, e = range(5)
+        states = {a, b, c, d, e}
+        alphabets = {"0", "1", "2", "3", "4"}
+        transitions = {
+            a: {"0": {a}, -1: {b}},
+            b: {"1": {b}, -1: {c}},
+            c: {"2": {c}, -1: {d}},
+            d: {"3": {d}, -1: {e}},
+            e: {"4": {e}}
+        }
+        init_state = a
+        final_states = {e}
+        self.converted_DFA = eNFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(states, alphabets, transitions, init_state, final_states)
+
+    def run(self, string):
+        return self.converted_DFA.run(string)
+
+
 class AutomatonTest(unittest.TestCase):
     """ オートマトンの動作確認 """
     automaton = [
@@ -183,6 +211,7 @@ class AutomatonTest(unittest.TestCase):
         IsIncreasingSequence,
         Has010_DFA,
         IsEnd0XXX_DFA,
+        IsIncreasingSequence_DFA,
     ]
 
     def test_automaton(self):
