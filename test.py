@@ -134,8 +134,8 @@ class AutomatonTest(unittest.TestCase):
             print(str(automata)[17:-2].center(70, "-"))
             instance = automata()
             for string, expected in instance.tests:
-                print("IN : \"%s\"\nOUT: %s" % (string, str(expected)))
                 result = instance.run(string)
+                print("%s: \"%s\"" % (str(result).ljust(5), string))
                 self.assertEqual(expected, result)
 
 if __name__ == "__main__":
