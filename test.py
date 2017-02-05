@@ -13,8 +13,8 @@ class IsLengthEven(DFA):
 
     def __init__(self):
         a, b = range(2)
-        states = [a, b]
-        alphabets = "01"
+        states = {a, b}
+        alphabets = {"0", "1"}
         transitions = {
             a: {"0": b, "1": b},
             b: {"0": a, "1": a},
@@ -34,8 +34,8 @@ class IsDivisibleBy3(DFA):
 
     def __init__(self):
         a, b, c = range(3)
-        states = [a, b, c]
-        alphabets = "01"
+        states = {a, b, c}
+        alphabets = {"0", "1"}
         transitions = {
             a: {"0": a, "1": b},
             b: {"0": c, "1": a},
@@ -57,8 +57,8 @@ class IsEnd0XXX(NFA):
 
     def __init__(self):
         a, b, c, d, e = range(5)
-        states = [a, b, c, d, e]
-        alphabets = "01"
+        states = {a, b, c, d, e}
+        alphabets = {"0", "1"}
         transitions = {
             a: {"0": {a, b}, "1": {a}},
             b: {"0": {c}, "1": {c}},
@@ -81,8 +81,8 @@ class Has010(NFA):
 
     def __init__(self):
         a, b, c, d = range(4)
-        states = [a, b, c, d]
-        alphabets = "01"
+        states = {a, b, c, d}
+        alphabets = {"0", "1"}
         transitions = {
             a: {"0": {a, b}, "1": {a}},
             b: {"1": {c}},
@@ -104,8 +104,8 @@ class IsIncreasingSequence(eNFA):
 
     def __init__(self):
         a, b, c, d, e = range(5)
-        states = [a, b, c, d, e]
-        alphabets = "01234"
+        states = {a, b, c, d, e}
+        alphabets = {"0", "1", "2", "3", "4"}
         transitions = {
             a: {"0": {a}, -1: {b}},
             b: {"1": {b}, -1: {c}},
