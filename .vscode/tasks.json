@@ -15,7 +15,7 @@
                     "start", 
                     "cmd /c", 
                     "python",
-                    "test.py"
+                    "${file}"
                 ]
             },
             {
@@ -23,7 +23,7 @@
                 "isBuildCommand": true,
                 "args": [
                     "python",
-                    "test.py"
+                    "${file}"
                 ]
             }
         ]
