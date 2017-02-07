@@ -1,5 +1,5 @@
 import tkinter
-from math import cos, sin, pi
+from math import cos, sin, pi, atan
 from Automata import DeterministicFiniteAutomata as DFA
 
 
@@ -27,6 +27,7 @@ class IsDivisibleBy3(DFA):
 
 
 class AutomataPainter():
+    """ オートマトンを描画する """
 
     def __init__(self, automata, width=512, height=512):
         self.width = width
@@ -38,8 +39,8 @@ class AutomataPainter():
         self.tk_root = self.setup_tk()
         self.tk_canvas = self.setup_canvas()
 
-        self.place_circle()
         self.place_arrow()
+        self.place_circle()
         self.tk_canvas.place(x=5, y=5)
         self.tk_root.mainloop()
 
@@ -54,15 +55,38 @@ class AutomataPainter():
 
     def place_circle(self):
         rad = 15
-        for pos in self.states_positions:
-            self.tk_canvas.create_oval(pos[0] - rad, pos[1] - rad,
-                                       pos[0] + rad, pos[1] + rad,
+        for x, y in self.states_positions:
+            self.tk_canvas.create_oval(x - rad, y - rad,
+                                       x + rad, y + rad,
                                        fill="red")
 
     def place_arrow(self):
-        for first in self.states_positions:
-            for last in self.states_positions:
-                self.tk_canvas.create_line(first[0], first[1], last[0], last[1], arrow=tkinter.LAST)
+        for a, b in self.states_positions:
+            for c, d in self.states_positions:
+                if a == c and b == d:
+                    continue
+                else:
+                    self.draw_arc(a, b, c, d)
+
+    def draw_arc(self, a, b, c, d):
+        distance = 2
+        center = [(a + c) / 2 + distance * (d - b), (b + d) / 2 - distance * (c - a)]
+        r = ((a - center[0])**2 + (b - center[1])**2)**0.5
+
+        theta = (atan((center[1] - b) / (center[0] - a)) * 180 / pi) % 360
+        phi = (atan((center[1] - d) / (center[0] - c)) * 180 / pi) % 360
+        if a < center[0]:
+            theta = (180 + theta) % 360
+        if c < center[0]:
+            phi = (180 + phi) % 360
+
+        extent = abs(phi - theta) if abs(phi - theta) < 180 else 360 - (phi - theta)
+        start = min(phi, theta) if abs(phi - theta) < 180 else max(phi, theta)
+        self.tk_canvas.create_arc(center[0] - r, center[1] - r,
+                                  center[0] + r, center[1] + r,
+                                  style=tkinter.ARC,
+                                  start=-start - extent,
+                                  extent=extent)
 
 
 if __name__ == "__main__":
