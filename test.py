@@ -118,7 +118,7 @@ class IsIncreasingSequence(eNFA):
         super().__init__(states, alphabets, transitions, init_state, final_states)
 
 
-class IsEnd0XXX_DFA(NFA):
+class IsEnd0XXX_DFA(DFA):
     """ 最後から四文字目が0である文字列を認識 """
     tests = (("00000000", True),
              ("000110", True),
@@ -139,11 +139,8 @@ class IsEnd0XXX_DFA(NFA):
         }
         init_state = a
         final_states = {e}
-        self.converted_DFA = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
-        super().__init__(states, alphabets, transitions, init_state, final_states)
-
-    def run(self, string):
-        return self.converted_DFA.run(string)
+        temp = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
 class Has010_DFA(DFA):
@@ -166,14 +163,11 @@ class Has010_DFA(DFA):
         }
         init_state = a
         final_states = {d}
-        self.converted_DFA = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
-        super().__init__(states, alphabets, transitions, init_state, final_states)
-
-    def run(self, string):
-        return self.converted_DFA.run(string)
+        temp = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
-class IsIncreasingSequence_DFA(eNFA):
+class IsIncreasingSequence_DFA(DFA):
     """ 広義単調増加な文字列を認識 """
     tests = (("01234", True),
              ("01122334444", True),
@@ -194,11 +188,8 @@ class IsIncreasingSequence_DFA(eNFA):
         }
         init_state = a
         final_states = {e}
-        self.converted_DFA = eNFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
-        super().__init__(states, alphabets, transitions, init_state, final_states)
-
-    def run(self, string):
-        return self.converted_DFA.run(string)
+        temp = eNFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
 class AutomatonTest(unittest.TestCase):
@@ -219,6 +210,7 @@ class AutomatonTest(unittest.TestCase):
         for automata in self.automaton:
             print(str(automata)[17:-2].center(70, "-"))
             instance = automata()
+            print(instance)
             for string, expected in instance.tests:
                 result = instance.run(string)
                 print("%s: \"%s\"" % (str(result).ljust(5), string))
