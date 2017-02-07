@@ -11,6 +11,29 @@ class Automata(object):
         self.init_state = init_state
         self.final_states = frozenset(final_states)
 
+    def __repr__(self):
+        str_trans = ""
+        for key, val in self.transitions.items():
+            str_trans += str(key) + " : " + str(val) + "\n                  "
+        str_trans = str_trans[:-19]
+
+        ans = """
+Automata
+    states      : %s
+    alphabets   : %s
+    transitions : %s
+    init_state  : %s
+    final_states: %s
+"""      % (str(self.states),
+            str(self.alphabets),
+            str_trans,
+            str(self.init_state),
+            str(self.final_states))
+        ans = ans.replace("frozenset()", "frozenset({})")
+        ans = ans.replace("frozenset(", "")
+        ans = ans.replace(")", "")
+        return ans
+
 
 class DeterministicFiniteAutomata(Automata):
     """ 決定性有限オートマトン """
