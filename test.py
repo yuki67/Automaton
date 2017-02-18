@@ -192,6 +192,32 @@ class IsIncreasingSequence_DFA(DFA):
         super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
+class MinimizeTest(DFA):
+    """ DFAの最小化のテスト """
+    tests = {}
+
+    def __init__(self):
+        a, b, c, d, e, f, g, h, = range(8)
+        states = {a, b, c, d, e, f, g, h}
+        alphabets = {"0", "1"}
+        transitions = {
+            a: {"0": b, "1": f},
+            b: {"0": g, "1": c},
+            c: {"0": a, "1": c},
+            d: {"0": c, "1": g},
+            e: {"0": h, "1": f},
+            f: {"0": c, "1": g},
+            g: {"0": g, "1": e},
+            h: {"0": g, "1": c}
+        }
+        init_state = a
+        final_states = {c}
+        temp = DFA(states, alphabets, transitions, init_state, final_states)
+        print(temp)
+        temp = temp.minimize()
+        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+
+
 class AutomatonTest(unittest.TestCase):
     """ オートマトンの動作確認 """
     automaton = [
@@ -203,6 +229,7 @@ class AutomatonTest(unittest.TestCase):
         Has010_DFA,
         IsEnd0XXX_DFA,
         IsIncreasingSequence_DFA,
+        MinimizeTest,
     ]
 
     def test_automaton(self):

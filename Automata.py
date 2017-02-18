@@ -49,6 +49,61 @@ class DeterministicFiniteAutomata(Automata):
                 state = self.transitions[state][char]
         return state in self.final_states
 
+    def minimize(self):
+        marked = set()
+        unmarked = set()
+        checked = set()
+        for p in self.states:
+            for q in self.states:
+                if frozenset({p, q}) in checked or p == q:
+                    continue
+                if (p in self.final_states and q not in self.final_states) or \
+                        (q in self.final_states and p not in self.final_states):
+                    marked.add(frozenset({p, q}))
+                else:
+                    unmarked.add(frozenset({p, q}))
+                checked.add(frozenset({p, q}))
+                checked.add(frozenset({q, p}))
+
+        flag = True
+        while flag:
+            flag = False
+            for p, q in unmarked:
+                for s in self.alphabets:
+                    if frozenset({self.transitions[p][s], self.transitions[q][s]}) in marked:
+                        flag = True
+                        marked.add(frozenset({p, q}))
+                        unmarked.remove(frozenset({p, q}))
+                        break
+                if flag:
+                    break
+
+        states_dict = {}
+        for p in self.states:
+            states_dict[p] = {p}
+        for p in self.states:
+            for q in self.states:
+                if frozenset({p, q}) in unmarked:
+                    states_dict[p].add(q)
+                    states_dict[q].add(p)
+
+        states = set()
+        init_state = None
+        final_states = set()
+        transitions = {}
+        for p in self.states:
+            state = frozenset(states_dict[p])
+            states.add(state)
+            transitions[state] = {}
+            for s in self.alphabets:
+                transitions[state][s] = states_dict[self.transitions[next(iter(state))][s]]
+            if self.init_state in state:
+                init_state = state
+            if len(self.final_states.intersection(state)) != 0:
+                final_states.add(state)
+        alphabets = self.alphabets
+        return DeterministicFiniteAutomata(states, alphabets, transitions, init_state, final_states)
+
 
 class NondeterministicFiniteAutomata(Automata):
     """ 非決定性有限オートマトン """
