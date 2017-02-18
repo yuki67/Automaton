@@ -1,5 +1,3 @@
-from itertools import chain, combinations
-
 
 class Automata(object):
     """ オートマトンの基底クラス """
