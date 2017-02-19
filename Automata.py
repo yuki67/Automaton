@@ -47,7 +47,10 @@ class DeterministicFiniteAutomata(Automata):
                 state = self.transitions[state][char]
         return state in self.final_states
 
-    def minimize(self):
+    def minimized(self):
+        """ 最小化されたDFAを返す """
+
+        # markedとunmarkedを初期化
         marked = set()
         unmarked = set()
         checked = set()
@@ -63,6 +66,7 @@ class DeterministicFiniteAutomata(Automata):
                 checked.add(frozenset({p, q}))
                 checked.add(frozenset({q, p}))
 
+        # markedを限界まで増やす
         flag = True
         while flag:
             flag = False
@@ -76,6 +80,7 @@ class DeterministicFiniteAutomata(Automata):
                 if flag:
                     break
 
+        # markedから最小化されたDFAの状態がどうなるか計算する
         states_dict = {}
         for p in self.states:
             states_dict[p] = {p}
@@ -85,6 +90,7 @@ class DeterministicFiniteAutomata(Automata):
                     states_dict[p].add(q)
                     states_dict[q].add(p)
 
+        # states_dictからtransitions, init_state, final_statesを作る
         states = set()
         init_state = None
         final_states = set()

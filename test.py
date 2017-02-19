@@ -214,7 +214,7 @@ class MinimizeTest(DFA):
         final_states = {c}
         temp = DFA(states, alphabets, transitions, init_state, final_states)
         print(temp)
-        temp = temp.minimize()
+        temp = temp.minimized()
         super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
