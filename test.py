@@ -218,6 +218,30 @@ class MinimizeTest(DFA):
         super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
+class IsNotDivisibleBy3(DFA):
+    """ 二進表記で3の倍数でない文字列を認識 """
+    tests = (("00000", not True),       # 0
+             ("0011", not True),        # 3
+             ("01110", not False),      # 14
+             ("1001", not True),        # 9
+             ("1110101110", not True))  # 942
+
+    def __init__(self):
+        a, b, c = range(3)
+        states = {a, b, c}
+        alphabets = {"0", "1"}
+        transitions = {
+            a: {"0": a, "1": b},
+            b: {"0": c, "1": a},
+            c: {"0": b, "1": c},
+        }
+
+        init_state = a
+        final_states = {a}
+        temp = DFA(states, alphabets, transitions, init_state, final_states).flliped()
+        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+
+
 class AutomatonTest(unittest.TestCase):
     """ オートマトンの動作確認 """
     automaton = [
@@ -230,6 +254,7 @@ class AutomatonTest(unittest.TestCase):
         IsEnd0XXX_DFA,
         IsIncreasingSequence_DFA,
         MinimizeTest,
+        IsNotDivisibleBy3,
     ]
 
     def test_automaton(self):
