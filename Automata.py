@@ -49,10 +49,7 @@ class DeterministicFiniteAutomata(Automata):
 
     def flliped(self):
         """ 受理する言語がひっくり返ったDFAを返す """
-        final_states = set()
-        for x in self.states:
-            if x not in self.final_states:
-                final_states.add(x)
+        final_states = set([x for x in self.states if x not in self.final_states])
         return DeterministicFiniteAutomata(self.states, self.alphabets, self.transitions, self.init_state, final_states)
 
     def minimized(self):
