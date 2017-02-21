@@ -28,8 +28,8 @@ Automata
             str(self.init_state),
             str(self.final_states))
         ans = ans.replace("frozenset()", "frozenset({})")
-        ans = ans.replace("frozenset(", "")
-        ans = ans.replace(")", "")
+        ans = ans.replace("frozenset({", "{")
+        ans = ans.replace("})", "}")
         return ans
 
 
@@ -167,6 +167,7 @@ class NFAWithEpsilonTransition(Automata):
 
     def reachables_with_a_epsilon_from(self, state):
         """ stateから一回のε遷移だけで到達可能な状態の集合を返す """
+
         return frozenset(self.transitions[state].get(-1, {}))
 
     def reachables_with_epsilons_from(self, state):
@@ -225,3 +226,32 @@ class NFAWithEpsilonTransition(Automata):
         init_state = self.reachables_with_epsilons_from(self.init_state)
         alphabets = self.alphabets
         return DeterministicFiniteAutomata(states, alphabets, transitions, init_state, final_states)
+
+    @staticmethod
+    def connect(automaton):
+        """ 複数のオートマトンを横並びに一つにまとめる """
+        init_state = (0, automaton[0].init_state)
+        final_states = set([(len(automaton) - 1, f) for f in automaton[-1].final_states])
+        alphabets = set()
+        states = set()
+        transitions = {}
+        for i, automata in enumerate(automaton):
+            # alphabetsを更新
+            alphabets = alphabets.union(automata.alphabets)
+
+            # staetsを更新
+            # 状態とautomataのインデックスを組にすることで唯一性を確保
+            states = states.union(set([(i, state) for state in automata.states]))
+
+            # automata内部の遷移を追加
+            for state, trans_dict in automata.transitions.items():
+                transitions[(i, state)] = {}
+                for char, states_transit_to in trans_dict.items():
+                    transitions[(i, state)][char] = frozenset([(i, state) for state in states_transit_to])
+
+            # 一つ前のautomataからのイプシロン遷移を追加
+            if i == 0:
+                continue
+            for pre_final_state in automaton[i - 1].final_states:
+                transitions[(i - 1, pre_final_state)][-1] = frozenset([(i, automata.init_state)])
+        return NFAWithEpsilonTransition(states, alphabets, transitions, init_state, final_states)
