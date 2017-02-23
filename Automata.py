@@ -137,27 +137,33 @@ class NondeterministicFiniteAutomata(Automata):
 
     def convert_to_DFA(self):
         """ 等価なDFAに変換する """
+        # 状態と遷移関数を作る
         states = {frozenset({self.init_state})}
         transitions = {}
-        final_states = set()
-
         to_search = {frozenset({self.init_state})}
         searched = set()
         while len(to_search) != 0:
             searching = to_search.pop()
             searched.add(searching)
             for char in self.alphabets:
+                # 実際に遷移させて考える
                 reachables = self.next_states(searching, char)
+                # 遷移先の状態集合そのものが一つの状態となる
                 states.add(reachables)
                 if reachables not in searched:
+                    # 遷移させた先がまだ調べていない状態だったらさらに調べる必要がある
                     to_search.add(reachables)
-                if len(self.final_states.intersection(reachables)) != 0:
-                    final_states.add(reachables)
                 if not transitions.get(searching):
+                    # 二重辞書の要素を一気に作ることはできないので注意
                     transitions[searching] = {}
+                # 遷移を追加する
                 transitions[searching][char] = frozenset(reachables)
 
+        # DFAの終了状態は終了状態を一つでも含む状態全体からなる集合
+        final_states = set([x for x in states if len(self.final_states.intersection(x)) != 0])
+        # DFAの始状態はNFAの始状態だけからなる集合
         init_state = frozenset({self.init_state})
+        # DFAのアルファベットはNFAと同じ
         alphabets = self.alphabets
         return DeterministicFiniteAutomata(states, alphabets, transitions, init_state, final_states)
 
