@@ -173,7 +173,6 @@ class NFAWithEpsilonTransition(Automata):
 
     def reachables_with_a_epsilon_from(self, state):
         """ stateから一回のε遷移だけで到達可能な状態の集合を返す """
-
         return frozenset(self.transitions[state].get(-1, {}))
 
     def reachables_with_epsilons_from(self, state):
@@ -234,7 +233,7 @@ class NFAWithEpsilonTransition(Automata):
         return DeterministicFiniteAutomata(states, alphabets, transitions, init_state, final_states)
 
     @staticmethod
-    def connect(automaton):
+    def serial_connect(automaton):
         """ 複数のオートマトンを横並びに一つにまとめる """
         init_state = (0, automaton[0].init_state)
         final_states = set([(len(automaton) - 1, f) for f in automaton[-1].final_states])
@@ -245,7 +244,7 @@ class NFAWithEpsilonTransition(Automata):
             # alphabetsを更新
             alphabets = alphabets.union(automata.alphabets)
 
-            # staetsを更新
+            # statesを更新
             # 状態とautomataのインデックスを組にすることで唯一性を確保
             states = states.union(set([(i, state) for state in automata.states]))
 

@@ -253,7 +253,7 @@ class IsIncreasingSequenceFollowedBy0XXX(eNFA):
     def __init__(self):
         inc = IsIncreasingSequence()
         end = IsEnd0XXX()
-        temp = eNFA.connect([inc, end])
+        temp = eNFA.serial_connect([inc, end])
         super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
