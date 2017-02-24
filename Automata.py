@@ -260,3 +260,35 @@ class NFAWithEpsilonTransition(Automata):
             for pre_final_state in automaton[i - 1].final_states:
                 transitions[(i - 1, pre_final_state)][-1] = frozenset([(i, automata.init_state)])
         return NFAWithEpsilonTransition(states, alphabets, transitions, init_state, final_states)
+
+    @staticmethod
+    def parallel_connect(automaton):
+        """ 複数のオートマトンを並列につなげる """
+        # 新しい始状態は定数1
+        init_state = 1
+        alphabets = set()
+        states = {init_state}
+        transitions = {}
+        final_states = set()
+        for i, automata in enumerate(automaton):
+            # alphabetsを更新
+            alphabets = alphabets.union(automata.alphabets)
+
+            # statesを更新
+            # 状態とautomataのインデックスを組にすることで唯一性を確保
+            states = states.union(set([(i, state) for state in automata.states]))
+
+            # automata内部の遷移をtransitionsに追加
+            for state, trans_dict in automata.transitions.items():
+                transitions[(i, state)] = {}
+                for char, states_transit_to in trans_dict.items():
+                    transitions[(i, state)][char] = frozenset([(i, state) for state in states_transit_to])
+
+            # 終了状態にautomata.finalstatesを追加
+            final_states = final_states.union(set([(i, final_state) for final_state in automata.final_states]))
+
+        # 最初のイプシロン遷移を追加
+        transitions[init_state] = {}
+        transitions[init_state][-1] = frozenset([(i, automata.init_state) for i, automata in enumerate(automaton)])
+
+        return NFAWithEpsilonTransition(states, alphabets, transitions, init_state, final_states)

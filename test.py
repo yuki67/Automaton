@@ -256,6 +256,21 @@ class IsDoubleIncreasingSequence(eNFA):
         super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
+class Has010OrEnd0XXX(eNFA):
+
+    tests = (("0010", True),
+             ("00111", True),
+             ("011111", False),
+             ("00010001111", True),
+             ("0001111001111", False))
+
+    def __init__(self):
+        zero10 = Has010()
+        zeroxxx = IsEnd0XXX()
+        temp = eNFA.parallel_connect([zero10, zeroxxx])
+        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+
+
 class AutomatonTest(unittest.TestCase):
     """ オートマトンの動作確認 """
     automaton = [
@@ -270,6 +285,7 @@ class AutomatonTest(unittest.TestCase):
         MinimizeTest,
         IsNotDivisibleBy3,
         IsDoubleIncreasingSequence,
+        Has010OrEnd0XXX,
     ]
 
     def test_automaton(self):
