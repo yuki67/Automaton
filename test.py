@@ -242,18 +242,17 @@ class IsNotDivisibleBy3(DFA):
         super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
-class IsIncreasingSequenceFollowedBy0XXX(eNFA):
+class IsDoubleIncreasingSequence(eNFA):
 
-    tests = (("00000", True),
-             ("1011", False),
-             ("0130110", True),
+    tests = (("0013", True),
+             ("10311", False),
+             ("0130112", True),
              ("13230001", False),
-             ("222233440100110", True))
+             ("22223344012344", True))
 
     def __init__(self):
         inc = IsIncreasingSequence()
-        end = IsEnd0XXX()
-        temp = eNFA.serial_connect([inc, end])
+        temp = eNFA.serial_connect([inc, inc])
         super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
 
 
@@ -270,7 +269,7 @@ class AutomatonTest(unittest.TestCase):
         IsIncreasingSequence_DFA,
         MinimizeTest,
         IsNotDivisibleBy3,
-        IsIncreasingSequenceFollowedBy0XXX,
+        IsDoubleIncreasingSequence,
     ]
 
     def test_automaton(self):
