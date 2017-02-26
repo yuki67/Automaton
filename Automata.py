@@ -56,6 +56,8 @@ class DeterministicFiniteAutomata(Automata):
         """ 最小化されたDFAを返す """
 
         # markedとunmarkedを初期化
+        # markedは区別できるペアの集合
+        # unmarkedは区別できないペアの集合
         marked = set()
         unmarked = set()
         checked = set()
@@ -77,6 +79,7 @@ class DeterministicFiniteAutomata(Automata):
             flag = False
             for p, q in unmarked:
                 for s in self.alphabets:
+                    # (p,q)をsで遷移させてmarkedにはいるなら(p,q)もmarkedに入る
                     if frozenset({self.transitions[p][s], self.transitions[q][s]}) in marked:
                         flag = True
                         marked.add(frozenset({p, q}))
@@ -85,7 +88,7 @@ class DeterministicFiniteAutomata(Automata):
                 if flag:
                     break
 
-        # markedから最小化されたDFAの状態がどうなるか計算する
+        # まず最小DFAの状態がどうなるか計算する
         states_dict = {}
         for p in self.states:
             states_dict[p] = {p}
@@ -95,16 +98,19 @@ class DeterministicFiniteAutomata(Automata):
                     states_dict[p].add(q)
                     states_dict[q].add(p)
 
-        # states_dictからtransitions, init_state, final_statesを作る
+        # 次にstates_dictからtransitions, init_state, final_statesを作る
         states = set()
         init_state = None
         final_states = set()
         transitions = {}
         for p in self.states:
             state = frozenset(states_dict[p])
+            if state in states:
+                continue
             states.add(state)
             transitions[state] = {}
             for s in self.alphabets:
+                # next(iter(X))は「Xから適当に一つ取る」という意味
                 transitions[state][s] = states_dict[self.transitions[next(iter(state))][s]]
             if self.init_state in state:
                 init_state = state
