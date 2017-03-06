@@ -14,14 +14,14 @@ class IsLengthEven(DFA):
     def __init__(self):
         a, b = range(2)
         states = {a, b}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": b, "1": b},
             b: {"0": a, "1": a},
         }
         init_state = a
         final_states = {a}
-        super().__init__(states, alphabets, transitions, init_state, final_states)
+        super().__init__(states, alphabet, transitions, init_state, final_states)
 
 
 class IsDivisibleBy3(DFA):
@@ -35,7 +35,7 @@ class IsDivisibleBy3(DFA):
     def __init__(self):
         a, b, c = range(3)
         states = {a, b, c}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": a, "1": b},
             b: {"0": c, "1": a},
@@ -44,7 +44,7 @@ class IsDivisibleBy3(DFA):
 
         init_state = a
         final_states = {a}
-        super().__init__(states, alphabets, transitions, init_state, final_states)
+        super().__init__(states, alphabet, transitions, init_state, final_states)
 
 
 class IsEnd0XXX(NFA):
@@ -58,7 +58,7 @@ class IsEnd0XXX(NFA):
     def __init__(self):
         a, b, c, d, e = range(5)
         states = {a, b, c, d, e}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": {a, b}, "1": {a}},
             b: {"0": {c}, "1": {c}},
@@ -68,7 +68,7 @@ class IsEnd0XXX(NFA):
         }
         init_state = a
         final_states = {e}
-        super().__init__(states, alphabets, transitions, init_state, final_states)
+        super().__init__(states, alphabet, transitions, init_state, final_states)
 
 
 class Has010(NFA):
@@ -82,7 +82,7 @@ class Has010(NFA):
     def __init__(self):
         a, b, c, d = range(4)
         states = {a, b, c, d}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": {a, b}, "1": {a}},
             b: {"1": {c}},
@@ -91,7 +91,7 @@ class Has010(NFA):
         }
         init_state = a
         final_states = {d}
-        super().__init__(states, alphabets, transitions, init_state, final_states)
+        super().__init__(states, alphabet, transitions, init_state, final_states)
 
 
 class IsIncreasingSequence(eNFA):
@@ -105,7 +105,7 @@ class IsIncreasingSequence(eNFA):
     def __init__(self):
         a, b, c, d, e = range(5)
         states = {a, b, c, d, e}
-        alphabets = {"0", "1", "2", "3", "4"}
+        alphabet = {"0", "1", "2", "3", "4"}
         transitions = {
             a: {"0": {a}, -1: {b}},
             b: {"1": {b}, -1: {c}},
@@ -115,7 +115,7 @@ class IsIncreasingSequence(eNFA):
         }
         init_state = a
         final_states = {e}
-        super().__init__(states, alphabets, transitions, init_state, final_states)
+        super().__init__(states, alphabet, transitions, init_state, final_states)
 
 
 class IsEnd0XXX_DFA(DFA):
@@ -129,7 +129,7 @@ class IsEnd0XXX_DFA(DFA):
     def __init__(self):
         a, b, c, d, e = range(5)
         states = {a, b, c, d, e}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": {a, b}, "1": {a}},
             b: {"0": {c}, "1": {c}},
@@ -139,8 +139,8 @@ class IsEnd0XXX_DFA(DFA):
         }
         init_state = a
         final_states = {e}
-        temp = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
-        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+        temp = NFA(states, alphabet, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
 class Has010_DFA(DFA):
@@ -154,7 +154,7 @@ class Has010_DFA(DFA):
     def __init__(self):
         a, b, c, d = range(4)
         states = {a, b, c, d}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": {a, b}, "1": {a}},
             b: {"1": {c}},
@@ -163,8 +163,8 @@ class Has010_DFA(DFA):
         }
         init_state = a
         final_states = {d}
-        temp = NFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
-        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+        temp = NFA(states, alphabet, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
 class IsIncreasingSequence_DFA(DFA):
@@ -178,7 +178,7 @@ class IsIncreasingSequence_DFA(DFA):
     def __init__(self):
         a, b, c, d, e = range(5)
         states = {a, b, c, d, e}
-        alphabets = {"0", "1", "2", "3", "4"}
+        alphabet = {"0", "1", "2", "3", "4"}
         transitions = {
             a: {"0": {a}, -1: {b}},
             b: {"1": {b}, -1: {c}},
@@ -188,8 +188,8 @@ class IsIncreasingSequence_DFA(DFA):
         }
         init_state = a
         final_states = {e}
-        temp = eNFA(states, alphabets, transitions, init_state, final_states).convert_to_DFA()
-        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+        temp = eNFA(states, alphabet, transitions, init_state, final_states).convert_to_DFA()
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
 class MinimizeTest(DFA):
@@ -199,7 +199,7 @@ class MinimizeTest(DFA):
     def __init__(self):
         a, b, c, d, e, f, g, h, = range(8)
         states = {a, b, c, d, e, f, g, h}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": b, "1": f},
             b: {"0": g, "1": c},
@@ -212,10 +212,10 @@ class MinimizeTest(DFA):
         }
         init_state = a
         final_states = {c}
-        temp = DFA(states, alphabets, transitions, init_state, final_states)
+        temp = DFA(states, alphabet, transitions, init_state, final_states)
         print(temp)
         temp = temp.minimized()
-        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
 class IsNotDivisibleBy3(DFA):
@@ -229,7 +229,7 @@ class IsNotDivisibleBy3(DFA):
     def __init__(self):
         a, b, c = range(3)
         states = {a, b, c}
-        alphabets = {"0", "1"}
+        alphabet = {"0", "1"}
         transitions = {
             a: {"0": a, "1": b},
             b: {"0": c, "1": a},
@@ -238,8 +238,8 @@ class IsNotDivisibleBy3(DFA):
 
         init_state = a
         final_states = {a}
-        temp = DFA(states, alphabets, transitions, init_state, final_states).flliped()
-        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+        temp = DFA(states, alphabet, transitions, init_state, final_states).flliped()
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
 class IsDoubleIncreasingSequence(eNFA):
@@ -253,7 +253,7 @@ class IsDoubleIncreasingSequence(eNFA):
     def __init__(self):
         inc = IsIncreasingSequence()
         temp = eNFA.serial_connect([inc, inc])
-        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
 class Has010OrEnd0XXX(eNFA):
@@ -268,7 +268,7 @@ class Has010OrEnd0XXX(eNFA):
         zero10 = Has010()
         zeroxxx = IsEnd0XXX()
         temp = eNFA.parallel_connect([zero10, zeroxxx])
-        super().__init__(temp.states, temp.alphabets, temp.transitions, temp.init_state, temp.final_states)
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
 class AutomatonTest(unittest.TestCase):

@@ -2,12 +2,19 @@
 class Automata(object):
     """ オートマトンの基底クラス """
 
-    def __init__(self, states, alphabets, transitions, init_state, final_states):
+    def __init__(self, states, alphabet, transitions, init_state, final_states):
         self.states = frozenset(states)
-        self.alphabets = frozenset(alphabets)
+        self.alphabet = frozenset(alphabet)
         self.transitions = transitions
         self.init_state = init_state
         self.final_states = frozenset(final_states)
+
+    def __eq__(self, other):
+        return self.states == other.states and \
+            self.alphabet == other.alphabet and \
+            self.transitions == other.transitions and \
+            self.init_state == other.init_state and \
+            self.final_states == other.final_states
 
     def __repr__(self):
         str_trans = ""
@@ -15,18 +22,16 @@ class Automata(object):
             str_trans += str(key) + " : " + str(val) + "\n                  "
         str_trans = str_trans[:-19]
 
-        ans = """
-Automata
+        ans = """Automata
     states      : %s
-    alphabets   : %s
+    alphabet   : %s
     transitions : %s
     init_state  : %s
-    final_states: %s
-"""      % (str(self.states),
-            str(self.alphabets),
-            str_trans,
-            str(self.init_state),
-            str(self.final_states))
+    final_states: %s""" % (str(self.states),
+                           str(self.alphabet),
+                           str_trans,
+                           str(self.init_state),
+                           str(self.final_states))
         ans = ans.replace("frozenset()", "frozenset({})")
         ans = ans.replace("frozenset({", "{")
         ans = ans.replace("})", "}")
@@ -40,7 +45,7 @@ class DeterministicFiniteAutomata(Automata):
         """ stringを認識するかチェックする """
         state = self.init_state
         for char in string:
-            if char not in self.alphabets:
+            if char not in self.alphabet:
                 print("ERROR : invalid character \"%s\"" % char)
                 return False
             else:
@@ -50,7 +55,7 @@ class DeterministicFiniteAutomata(Automata):
     def flliped(self):
         """ 受理する言語がひっくり返ったDFAを返す """
         final_states = set([x for x in self.states if x not in self.final_states])
-        return DeterministicFiniteAutomata(self.states, self.alphabets, self.transitions, self.init_state, final_states)
+        return DeterministicFiniteAutomata(self.states, self.alphabet, self.transitions, self.init_state, final_states)
 
     def minimized(self):
         """ 最小化されたDFAを返す """
@@ -78,7 +83,7 @@ class DeterministicFiniteAutomata(Automata):
         while flag:
             flag = False
             for p, q in unmarked:
-                for s in self.alphabets:
+                for s in self.alphabet:
                     # (p,q)をsで遷移させてmarkedにはいるなら(p,q)もmarkedに入る
                     if frozenset({self.transitions[p][s], self.transitions[q][s]}) in marked:
                         flag = True
@@ -109,15 +114,15 @@ class DeterministicFiniteAutomata(Automata):
                 continue
             states.add(state)
             transitions[state] = {}
-            for s in self.alphabets:
+            for s in self.alphabet:
                 # next(iter(X))は「Xから適当に一つ取る」という意味
                 transitions[state][s] = states_dict[self.transitions[next(iter(state))][s]]
             if self.init_state in state:
                 init_state = state
             if len(self.final_states.intersection(state)) != 0:
                 final_states.add(state)
-        alphabets = self.alphabets
-        return DeterministicFiniteAutomata(states, alphabets, transitions, init_state, final_states)
+        alphabet = self.alphabet
+        return DeterministicFiniteAutomata(states, alphabet, transitions, init_state, final_states)
 
 
 class NondeterministicFiniteAutomata(Automata):
@@ -127,7 +132,7 @@ class NondeterministicFiniteAutomata(Automata):
         """ stringを認識するかチェックする """
         states = {self.init_state}
         for char in string:
-            if char not in self.alphabets:
+            if char not in self.alphabet:
                 print("ERROR : invalid character \"%s\"" % char)
                 return False
             else:
@@ -151,7 +156,7 @@ class NondeterministicFiniteAutomata(Automata):
         while len(to_search) != 0:
             searching = to_search.pop()
             searched.add(searching)
-            for char in self.alphabets:
+            for char in self.alphabet:
                 reachables = self.next_states(searching, char)
                 states.add(reachables)
                 if reachables not in searched:
@@ -167,8 +172,8 @@ class NondeterministicFiniteAutomata(Automata):
         # DFAの始状態はNFAの始状態だけからなる集合
         init_state = frozenset({self.init_state})
         # DFAのアルファベットはNFAと同じ
-        alphabets = self.alphabets
-        return DeterministicFiniteAutomata(states, alphabets, transitions, init_state, final_states)
+        alphabet = self.alphabet
+        return DeterministicFiniteAutomata(states, alphabet, transitions, init_state, final_states)
 
 
 class NFAWithEpsilonTransition(Automata):
@@ -202,7 +207,7 @@ class NFAWithEpsilonTransition(Automata):
         """ stringを認識するかチェックする """
         states = self.reachables_with_epsilons_from(self.init_state)
         for char in string:
-            if char not in self.alphabets:
+            if char not in self.alphabet:
                 print("ERROR : invalid character \"%s\"" % char)
                 return False
             else:
@@ -219,7 +224,7 @@ class NFAWithEpsilonTransition(Automata):
         while len(to_search) != 0:
             searching = to_search.pop()
             searched.add(searching)
-            for char in self.alphabets:
+            for char in self.alphabet:
                 reachables = self.next_states(searching, char)
                 states.add(reachables)
                 if reachables not in searched:
@@ -235,24 +240,26 @@ class NFAWithEpsilonTransition(Automata):
         # DFAの始状態はNFAの始状態からイプシロン遷移で到達できる状態の集合
         init_state = self.reachables_with_epsilons_from(self.init_state)
         # DFAのアルファベットはNFAと同じ
-        alphabets = self.alphabets
-        return DeterministicFiniteAutomata(states, alphabets, transitions, init_state, final_states)
+        alphabet = self.alphabet
+        return DeterministicFiniteAutomata(states, alphabet, transitions, init_state, final_states)
 
     @staticmethod
     def serial_connect(automaton):
         """ 複数のオートマトンを横並びに一つにまとめる """
-        alphabets = set()
+        alphabet = set()
         states = set()
         transitions = {}
         for i, automata in enumerate(automaton):
-            # alphabetsを更新
-            alphabets = alphabets.union(automata.alphabets)
+            # alphabetを更新
+            alphabet = alphabet.union(automata.alphabet)
 
             # statesを更新
             # 状態とautomataのインデックスを組にすることで唯一性を確保
             states = states.union(set([(i, state) for state in automata.states]))
 
             # automata内部の遷移をtransitionsに追加
+            for final_state in automata.final_states:
+                transitions[(i, final_state)] = {}
             for state, trans_dict in automata.transitions.items():
                 transitions[(i, state)] = {}
                 for char, states_transit_to in trans_dict.items():
@@ -267,20 +274,20 @@ class NFAWithEpsilonTransition(Automata):
         # 始状態と終状態を作る
         init_state = (0, automaton[0].init_state)
         final_states = set([(len(automaton) - 1, f) for f in automaton[-1].final_states])
-        return NFAWithEpsilonTransition(states, alphabets, transitions, init_state, final_states)
+        return NFAWithEpsilonTransition(states, alphabet, transitions, init_state, final_states)
 
     @staticmethod
     def parallel_connect(automaton):
         """ 複数のオートマトンを並列につなげる """
         # 新しい始状態は定数1
         init_state = 1
-        alphabets = set()
+        alphabet = set()
         states = {init_state}
         transitions = {}
         final_states = set()
         for i, automata in enumerate(automaton):
-            # alphabetsを更新
-            alphabets = alphabets.union(automata.alphabets)
+            # alphabetを更新
+            alphabet = alphabet.union(automata.alphabet)
 
             # statesを更新
             # 状態とautomataのインデックスを組にすることで唯一性を確保
@@ -299,4 +306,4 @@ class NFAWithEpsilonTransition(Automata):
         transitions[init_state] = {}
         transitions[init_state][-1] = frozenset([(i, automata.init_state) for i, automata in enumerate(automaton)])
 
-        return NFAWithEpsilonTransition(states, alphabets, transitions, init_state, final_states)
+        return NFAWithEpsilonTransition(states, alphabet, transitions, init_state, final_states)
