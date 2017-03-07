@@ -307,3 +307,30 @@ class NFAWithEpsilonTransition(Automata):
         transitions[init_state][-1] = frozenset([(i, automata.init_state) for i, automata in enumerate(automaton)])
 
         return NFAWithEpsilonTransition(states, alphabet, transitions, init_state, final_states)
+
+    @staticmethod
+    def repeat(automata):
+        """ automataが受理する文字列をn回並べた文字列をすべて受理するeNFAを返す(n=0,1,2...) """
+        # init_stateとfinal_stateをautomataのstatesとかぶらないように決める
+        i = 1
+        while i in automata.states:
+            i += 1
+        init_state = i
+
+        j = -1
+        while j in automata.states:
+            j -= 1
+        final_state = j
+
+        # 状態は元の状態に始状態と終状態を追加したもの
+        states = automata.states.union({init_state, final_state})
+
+        # 遷移を追加する
+        transitions = automata.transitions
+        transitions[init_state] = {}
+        transitions[init_state][-1] = {automata.init_state, final_state}
+        transitions[final_state] = {}
+        for final in automata.final_states:
+            transitions[final][-1] = {automata.init_state, final_state}
+
+        return NFAWithEpsilonTransition(states, automata.alphabet, transitions, init_state, {final_state})
