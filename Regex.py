@@ -85,7 +85,7 @@ def concat_split(string):
 def regex_to_eNFA(string, alphabet):
     print("regex_to_eNFA :", string)
     if is_atom(string):
-        return eNFA_one_word(string, alphabet)
+        return eNFA.one_word(string, alphabet)
     elif is_repeat(string):
         return eNFA.repeat(regex_to_eNFA(string[:-1], alphabet))
     elif is_union(string):
@@ -95,18 +95,6 @@ def regex_to_eNFA(string, alphabet):
     else:
         assert False, "invalid regular expression: %s" % string
 
-
-def eNFA_one_word(char, alphabet):
-    """ char一文字だけ認識するeNFAを返す """
-    states = {0, 1}
-    alphabet = alphabet
-    transitions = {
-        0: {char: {1}},
-        1: {}
-    }
-    init_state = 0
-    final_states = {1}
-    return eNFA(states, alphabet, transitions, init_state, final_states)
 
 if __name__ == "__main__":
     import doctest

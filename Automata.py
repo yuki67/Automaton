@@ -334,3 +334,16 @@ class NFAWithEpsilonTransition(Automata):
             transitions[final][-1] = {automata.init_state, final_state}
 
         return NFAWithEpsilonTransition(states, automata.alphabet, transitions, init_state, {final_state})
+
+    @staticmethod
+    def one_word(char, alphabet):
+        """ char一文字だけ認識するeNFAを返す """
+        states = {0, 1}
+        alphabet = alphabet
+        transitions = {
+            0: {char: {1}},
+            1: {}
+        }
+        init_state = 0
+        final_states = {1}
+        return NFAWithEpsilonTransition(states, alphabet, transitions, init_state, final_states)
