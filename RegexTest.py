@@ -26,10 +26,18 @@ class RegexTest(unittest.TestCase):
                    ["abbbbba", True],
                    ["aa", True],
                    ["aabb", False],
-                   ["aabaaabb", False]]]]
+                   ["aabaaabb", False]]],
+                 ["(a+b)*",
+                  [["a", True],
+                   ["b", True],
+                   ["", True],
+                   ["ababababbbbbbbb", True],
+                   ["aaaaaaaaaaaaabbb", True]]]]
         for regex, tests in cases:
             enfa = regex_to_eNFA(regex, alphabet)
+            # print(enfa)
             for test, expected in tests:
+                # print(test, expected)
                 self.assertEqual(enfa.run(test), expected)
 
 
