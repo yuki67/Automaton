@@ -82,19 +82,21 @@ def concat_split(string):
     return ans
 
 
-def regex_to_eNFA(string, alphabet):
-    print("regex_to_eNFA :", string)
+def single_regex_to_eNFA(string, alphabet):
+    """ 一項からなる正規表現stringを認識するeNFAを返す """
     if is_atom(string):
         return eNFA.one_word(string, alphabet)
     elif is_repeat(string):
         return eNFA.repeat(regex_to_eNFA(string[:-1], alphabet))
     elif is_union(string):
         return eNFA.parallel_connect([regex_to_eNFA(sub_regex, alphabet) for sub_regex in union_split(string)])
-    if is_concat(string):
-        return eNFA.serial_connect([regex_to_eNFA(sub_regex, alphabet) for sub_regex in concat_split(string)])
     else:
         assert False, "invalid regular expression: %s" % string
 
+
+def regex_to_eNFA(string, alphabet):
+    """ 正規表現stringを認識するeNFAを返す """
+    return eNFA.serial_connect([single_regex_to_eNFA(single_regex, alphabet) for single_regex in concat_split(string)])
 
 if __name__ == "__main__":
     import doctest
