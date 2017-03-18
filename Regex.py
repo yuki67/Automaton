@@ -16,7 +16,7 @@ def is_atom(string):
     >>> is_atom("(ab)")
     False
     """
-    return True if len(string) == 1 and string not in "()+*" else False
+    return True if len(string) == 1 and string not in "()|*." else False
 
 
 def is_repeat(string):
@@ -67,8 +67,8 @@ def concat_split(string):
     ['a', 'b']
     >>> concat_split("a*")
     ['a*']
-    >>> concat_split("(abc)*(a+b+c)(cba)*abc")
-    ['(abc)*', '(a+b+c)', '(cba)*', 'a', 'b', 'c']
+    >>> concat_split("(abc)*(a|b|c)(cba)*abc")
+    ['(abc)*', '(a|b|c)', '(cba)*', 'a', 'b', 'c']
     >>> concat_split("...")
     ['.', '.', '.']
     """
@@ -94,12 +94,12 @@ def concat_split(string):
 def union_split(string):
     """
     和の正規表現stringを分割して返す
-    >>> union_split("(a+b+c)")
+    >>> union_split("(a|b|c)")
     ['a', 'b', 'c']
-    >>> union_split("(a+ab+(b)*)")
+    >>> union_split("(a|ab|(b)*)")
     ['a', 'ab', '(b)*']
     """
-    return string[1:-1].split("+")
+    return string[1:-1].split("|")
 
 
 def single_regex_to_eNFA(string, alphabet):

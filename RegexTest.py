@@ -27,7 +27,7 @@ class RegexTest(unittest.TestCase):
                    ["aa", True],
                    ["aabb", False],
                    ["aabaaabb", False]]],
-                 ["(a+b)*",
+                 ["(a|b)*",
                   [["a", True],
                    ["b", True],
                    ["", True],
