@@ -271,6 +271,18 @@ class Has010OrEnd0XXX(eNFA):
         super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
 
 
+class TrivialTest(eNFA):
+
+    tests = (("", False),
+             ("0", True),
+             ("100", False),
+             ("1", True))
+
+    def __init__(self):
+        temp = eNFA.any_word("01")
+        super().__init__(temp.states, temp.alphabet, temp.transitions, temp.init_state, temp.final_states)
+
+
 class AutomatonTest(unittest.TestCase):
     """ オートマトンの動作確認 """
     automaton = [
@@ -286,6 +298,7 @@ class AutomatonTest(unittest.TestCase):
         IsNotDivisibleBy3,
         IsDoubleIncreasingSequence,
         Has010OrEnd0XXX,
+        TrivialTest,
     ]
 
     def test_automaton(self):

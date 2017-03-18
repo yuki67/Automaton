@@ -1,6 +1,11 @@
 from Automata import NFAWithEpsilonTransition as eNFA
 
 
+def is_any(string):
+    """ stringが任意の一文字を表す記号"."ならTrue """
+    return string == "."
+
+
 def is_atom(string):
     """
     stringが通常の文字一つならTrue、それ以外はFalse
@@ -64,6 +69,8 @@ def concat_split(string):
     ['a*']
     >>> concat_split("(abc)*(a+b+c)(cba)*abc")
     ['(abc)*', '(a+b+c)', '(cba)*', 'a', 'b', 'c']
+    >>> concat_split("...")
+    ['.', '.', '.']
     """
     ans = []
     index = 0
@@ -97,6 +104,8 @@ def union_split(string):
 
 def single_regex_to_eNFA(string, alphabet):
     """ 一項からなる正規表現stringを認識するeNFAを返す """
+    if is_any(string):
+        return eNFA.any_word(alphabet)
     if is_atom(string):
         return eNFA.one_word(string, alphabet)
     elif is_repeat(string):

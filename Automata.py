@@ -347,3 +347,17 @@ class NFAWithEpsilonTransition(Automata):
         init_state = 0
         final_states = {1}
         return NFAWithEpsilonTransition(states, alphabet, transitions, init_state, final_states)
+
+    @staticmethod
+    def any_word(alphabet):
+        """ 任意の文字一文字を認識するeNFAを返す """
+        states = {0, 1, 2}
+        alphabet = alphabet
+        transitions = {0: {}, 1: {}, 2: {}}
+        for char in alphabet:
+            transitions[0][char] = {1}
+            transitions[1][char] = {2}
+            transitions[2][char] = {2}
+        init_state = 0
+        final_states = {1}
+        return NFAWithEpsilonTransition(states, alphabet, transitions, init_state, final_states)

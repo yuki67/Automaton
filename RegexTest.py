@@ -32,7 +32,19 @@ class RegexTest(unittest.TestCase):
                    ["b", True],
                    ["", True],
                    ["ababababbbbbbbb", True],
-                   ["aaaaaaaaaaaaabbb", True]]]]
+                   ["aaaaaaaaaaaaabbb", True]]],
+                 [".*",
+                  [["a", True],
+                   ["b", True],
+                   ["", True],
+                   ["ababababbbbbbbb", True],
+                   ["aaaaaaaaaaaaabbb", True]]],
+                 ["...",
+                  [["aaa", True],
+                   ["baa", True],
+                   ["aaabbbaabaa", False],
+                   ["ababababbbbbbbb", False],
+                   ["aaaaaaaaaaaaabbb", False]]]]
         for regex, tests in cases:
             enfa = regex_to_eNFA(regex, alphabet)
             # print(enfa)
