@@ -59,6 +59,31 @@ def is_union(string):
     return string[0] == "(" and string[-1] == ")"
 
 
+def remove_outer_branket(string):
+    """
+    一番外側のカッコが外せるなら外して、外せないならそのまま返す
+
+    >>> remove_outer_branket("(abc)")
+    'abc'
+    >>> remove_outer_branket("(a|b)(c|d)")
+    '(a|b)(c|d)'
+    """
+    if not (string[0] == "(" and string[-1] == ")"):
+        return string
+
+    blanket_count = 0
+    for char in string[:-1]:
+        if char == "(":
+            blanket_count += 1
+        elif char == ")":
+            blanket_count -= 1
+        if blanket_count == 0:
+            return string
+        if blanket_count == 1 and char == "|":
+            return string
+    return string[1:-1]
+
+
 def concat_split(string):
     """
     正規表現の連結stringを正規表現一つづつに切って返す
@@ -71,22 +96,29 @@ def concat_split(string):
     ['(abc)*', '(a|b|c)', '(cba)*', 'a', 'b', 'c']
     >>> concat_split("...")
     ['.', '.', '.']
+    >>> concat_split("((a|A)(b|B)(c|C))")
+    ['(a|A)', '(b|B)', '(c|C)']
+    >>> concat_split("((a|A)(b|B)(c|C))*")
+    ['((a|A)(b|B)(c|C))*']
     """
     ans = []
     index = 0
+    string = remove_outer_branket(string)
     while index < len(string):
         buf = string[index]
         index += 1
         if buf == "(":
-            while string[index] != ")":
+            blanket_count = 1
+            while blanket_count > 0:
+                if string[index] == "(":
+                    blanket_count += 1
+                elif string[index] == ")":
+                    blanket_count -= 1
                 buf += string[index]
                 index += 1
-            buf += ")"
-            index += 1
         if index < len(string) and string[index] == "*":
             buf += "*"
             index += 1
-
         ans.append(buf)
     return ans
 

@@ -52,6 +52,19 @@ class RegexTest(unittest.TestCase):
                 # print(test, expected)
                 self.assertEqual(enfa.run(test), expected)
 
+        alphabet = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        cases = [["((a|A)(b|B)(c|C))*",
+                  [["abc", True],
+                   ["ABcAbc", True],
+                   ["abcabcc", False],
+                   ["abcAbcABCabCabc", True]]], ]
+        for regex, tests in cases:
+            enfa = regex_to_eNFA(regex, alphabet)
+            # print(enfa)
+            for test, expected in tests:
+                # print(test, expected)
+                self.assertEqual(enfa.run(test), expected)
+
 
 def run():
     suite = unittest.TestSuite()
