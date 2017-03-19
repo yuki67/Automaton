@@ -1,7 +1,7 @@
 from Automata import NFAWithEpsilonTransition as eNFA
 
 
-def is_any(string):
+def is_dot(string):
     """ stringが任意の一文字を表す記号"."ならTrue """
     return string == "."
 
@@ -136,7 +136,7 @@ def union_split(string):
 
 def single_regex_to_eNFA(string, alphabet):
     """ 一項からなる正規表現stringを認識するeNFAを返す """
-    if is_any(string):
+    if is_dot(string):
         return eNFA.any_word(alphabet)
     if is_atom(string):
         return eNFA.one_word(string, alphabet)
