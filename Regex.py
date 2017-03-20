@@ -102,24 +102,21 @@ def concat_split(string):
     ['((a|A)(b|B)(c|C))*']
     """
     ans = []
-    index = 0
+    right = left = 0
     string = remove_outer_branket(string)
-    while index < len(string):
-        buf = string[index]
-        index += 1
-        if buf == "(":
+    while left < len(string):
+        if string[left] == "(":
             blanket_count = 1
             while blanket_count > 0:
-                if string[index] == "(":
+                left += 1
+                if string[left] == "(":
                     blanket_count += 1
-                elif string[index] == ")":
+                elif string[left] == ")":
                     blanket_count -= 1
-                buf += string[index]
-                index += 1
-        if index < len(string) and string[index] == "*":
-            buf += "*"
-            index += 1
-        ans.append(buf)
+        if left + 1 < len(string) and string[left + 1] == "*":
+            left += 1
+        ans.append(string[right:left + 1])
+        right, left = left + 1, left + 1
     return ans
 
 
