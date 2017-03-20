@@ -19,7 +19,7 @@ class Automata(object):
     def __repr__(self):
         str_trans = ""
         for key, val in self.transitions.items():
-            str_trans += str(key) + " : " + str(val) + "\n                  "
+            str_trans += str(key).replace("\n", "") + " : " + str(val).replace("\n", "") + "\n                  "
         str_trans = str_trans[:-19]
 
         ans = """Automata
@@ -27,11 +27,11 @@ class Automata(object):
     alphabet   : %s
     transitions : %s
     init_state  : %s
-    final_states: %s""" % (str(self.states),
-                           str(self.alphabet),
+    final_states: %s""" % (str(self.states).replace("\n", ""),
+                           str(self.alphabet).replace("\n", ""),
                            str_trans,
-                           str(self.init_state),
-                           str(self.final_states))
+                           str(self.init_state).replace("\n", ""),
+                           str(self.final_states).replace("\n", ""))
         ans = ans.replace("frozenset()", "frozenset({})")
         ans = ans.replace("frozenset({", "{")
         ans = ans.replace("})", "}")
