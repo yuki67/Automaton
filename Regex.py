@@ -33,18 +33,6 @@ def is_repeat(string):
     return len(string) > 1 and string[-1] == "*"
 
 
-def is_concat(string):
-    """
-    stringが複数の要素の連結ならTrue、一つの要素だけからなるならFalse
-
-    >>> is_concat("a")
-    False
-    >>> is_concat("ab")
-    True
-    """
-    return len(string) > 1
-
-
 def is_union(string):
     """
     stringが文字の集合を表す正規表現ならTrue
