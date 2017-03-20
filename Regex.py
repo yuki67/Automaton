@@ -81,7 +81,7 @@ def remove_outer_branket(string):
             return string
         if blanket_count == 1 and char == "|":
             return string
-    return string[1:-1]
+    return remove_outer_branket(string[1:-1])
 
 
 def concat_split(string):
@@ -96,7 +96,7 @@ def concat_split(string):
     ['(abc)*', '(a|b|c)', '(cba)*', 'a', 'b', 'c']
     >>> concat_split("...")
     ['.', '.', '.']
-    >>> concat_split("((a|A)(b|B)(c|C))")
+    >>> concat_split("(((a|A)(b|B)(c|C)))")
     ['(a|A)', '(b|B)', '(c|C)']
     >>> concat_split("((a|A)(b|B)(c|C))*")
     ['((a|A)(b|B)(c|C))*']
